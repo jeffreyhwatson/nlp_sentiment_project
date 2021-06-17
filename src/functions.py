@@ -29,3 +29,19 @@ def tweet_tokens(tweet):
     no_stopwords = [token.lower() for token in tokens if
                     token.lower() not in stop_set]
     return no_stopwords
+
+def lemmatize(processed_data):
+    lemmatizer = WordNetLemmatizer()
+    lemmas = []
+    for doc in processed_data:
+        lemms = ' '.join([lemmatizer.lemmatize(word) for word in doc])
+        lemmas.append(lemms)
+    return lemmas
+
+def stemmatize(processed_data):
+    ps = PorterStemmer()
+    stemmed = []
+    for doc in processed_data:
+        stems = ' '.join([ps.stem(word) for word in doc])
+        stemmed.append(stems)    
+    return stemmed

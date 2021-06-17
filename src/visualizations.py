@@ -54,3 +54,18 @@ def null_brand_emotions(df):
     # plt.savefig('null_emotion_counts',  bbox_inches ="tight",\
     #             pad_inches = .25, transparent = False)
     plt.show()
+    
+def brand_emotions(df):
+    bdf = df.groupby('brand_product')['emotion'].value_counts(normalize=True).unstack()
+    bdf.plot(kind='barh', figsize=(20,10), color=['ghostwhite', 'lightblue', 'steelblue', 'darkblue'], edgecolor='deepskyblue')
+    
+    plt.xticks(rotation=0)
+    plt.title('Emotions by Brand/Product', fontsize=30)
+    plt.xlabel('')
+    plt.ylabel('')
+    plt.legend(title='Emotion',
+               labels=['Unknown', 'Positive', 'Negative', 'Neutral'])
+    # plt.savefig('brand_emotions',  bbox_inches ="tight",\
+    #             pad_inches = .25, transparent = False)
+    plt.show()
+    
