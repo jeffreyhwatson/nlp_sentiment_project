@@ -45,3 +45,31 @@ def stemmatize(processed_data):
         stems = ' '.join([ps.stem(word) for word in doc])
         stemmed.append(stems)    
     return stemmed
+
+def ht_extract(data):
+    hashlists = []
+    for element in data:
+        hashtag = re.findall(r'\B#\w*[a-zA-Z]+\w*', element)
+        hashlists.append(hashtag)
+    hashtags = [hashtag.lower() for h_list in hashlists for hashtag in h_list]
+    return hashtags
+
+# re to find hashtags and keep (#)
+r'\B#\w*[a-zA-Z]+\w*'
+
+# re to find hashtags and remove (#)
+"#([a-zA-Z0-9_]{1,50})"
+
+def find_strings(data, expression):
+    strings = []
+    for tweet in data:
+        string = re.findall(expression, tweet)
+        if len(string) != 0:
+            strings.append(string)
+    return strings
+
+def string_checker(data_list, string):
+    if string in data_list:
+        print('string is in data')
+    else:
+        print('string is not in data')

@@ -68,4 +68,25 @@ def brand_emotions(df):
     # plt.savefig('brand_emotions',  bbox_inches ="tight",\
     #             pad_inches = .25, transparent = False)
     plt.show()
-    
+
+def hashtag_c(df):
+    counts = df['hashtags'].value_counts()[:20]
+    percents = df['hashtags'].value_counts(normalize=True)[:20]
+    tags = df['hashtags'].value_counts()[:20].index
+
+    fig, ax = plt.subplots(figsize=(16,8))
+    sns.barplot(x=counts, y=tags, palette='Blues_r')
+    plt.title('Counts of the Top 20 Hashtags')
+    plt.xlabel('Count')
+    plt.show()
+
+def hashtag_p(df):
+    counts = df['hashtags'].value_counts()[:20]
+    percents = df['hashtags'].value_counts(normalize=True)[:20]
+    tags = df['hashtags'].value_counts()[:20].index
+
+    fig, ax = plt.subplots(figsize=(16,8))
+    sns.barplot(x=percents, y=tags, palette='Blues_r')
+    plt.title('Percentages of the Top 20 Hashtags')
+    plt.xlabel('Percent')
+    plt.show()
