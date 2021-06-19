@@ -73,3 +73,5 @@ def string_checker(data_list, string):
         print('string is in data')
     else:
         print('string is not in data')
+        
+# á¾_Î¾ÐåÊ
