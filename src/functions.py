@@ -1,4 +1,6 @@
 import string, re
+import pandas as pd
+import numpy as np
 import nltk
 from nltk.probability import FreqDist
 from nltk.corpus import stopwords
@@ -15,20 +17,9 @@ def re_tokens(tweet):
                     token.lower() not in stop_set]
     return no_stopwords
 
-def vocabulary(processed_data):
-    vocabulary = set()
-    for tweet in processed_data:
-        vocabulary.update(tweet)
-    return vocabulary
-
-def tweet_tokens(tweet):
-    stop_list = stopwords.words('english')
-    stop_list += list(string.punctuation)
-    stop_set = set(stop_list)
-    tokens = nltk.word_tokenize(tweet)
-    no_stopwords = [token.lower() for token in tokens if
-                    token.lower() not in stop_set]
-    return no_stopwords
+def vocabulary(data):
+    vocab = [word for tweet in data for word in tweet.split()]
+    return set(vocab)
 
 def lemmatize(processed_data):
     lemmatizer = WordNetLemmatizer()
@@ -54,12 +45,6 @@ def ht_extract(data):
     hashtags = [hashtag.lower() for h_list in hashlists for hashtag in h_list]
     return hashtags
 
-# re to find hashtags and keep (#)
-r'\B#\w*[a-zA-Z]+\w*'
-
-# re to find hashtags and remove (#)
-"#([a-zA-Z0-9_]{1,50})"
-
 def find_strings(data, expression):
     strings = []
     for tweet in data:
@@ -73,5 +58,47 @@ def string_checker(data_list, string):
         print('string is in data')
     else:
         print('string is not in data')
-        
-# á¾_Î¾ÐåÊ
+
+def clean_lemms(data):
+    stripped_data = []
+    subs = [(r'\{link\}', ''),
+            (r'http\S+', ''),
+            ('RT\s@[A-Za-z]+[A-Za-z0-9-_]+', ''),
+            ('@[A-Za-z]+[A-Za-z0-9-_]+', ''),
+            ('(&amp)', ''),
+            ('(&quot)', ''),
+            ('(&nbsp)', ''),
+            ('(&lt)', ''),
+            ('(&gt)', ''),
+            ('(RT\s)', '')
+           ]
+    for tweet in data:
+        for pair in subs:
+            tweet = re.sub(pair[0], pair[1], tweet)
+        stripped_data.append(tweet)
+    stripped = pd.Series(stripped_data)
+    processed_data = list(map(re_tokens, stripped))
+    lemmas = lemmatize(processed_data)
+    return lemmas
+
+def clean_stems(data):
+    stripped_data = []
+    subs = [(r'\{link\}', ''),
+            (r'http\S+', ''),
+            ('RT\s@[A-Za-z]+[A-Za-z0-9-_]+', ''),
+            ('@[A-Za-z]+[A-Za-z0-9-_]+', ''),
+            ('(&amp)', ''),
+            ('(&quot)', ''),
+            ('(&nbsp)', ''),
+            ('(&lt)', ''),
+            ('(&gt)', ''),
+            ('(RT\s)', '')
+           ]
+    for tweet in data:
+        for pair in subs:
+            tweet = re.sub(pair[0], pair[1], tweet)
+        stripped_data.append(tweet)
+    stripped = pd.Series(stripped_data)
+    processed_data = list(map(re_tokens, stripped))
+    stems = stemmatize(processed_data)
+    return stems
