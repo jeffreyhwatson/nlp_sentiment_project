@@ -23,11 +23,6 @@ def word_list(data):
     vocab = [word for tweet in data for word in tweet]
     return vocab
 
-def vocabulary(data):
-    "Returns a set of words from a list of word lists"
-    vocab = [word for tweet in data for word in tweet]
-    return set(vocab)
-
 def lemmatize(processed_data):
     "Returns a set of lemmatized words from a list of word lists"
     lemmatizer = WordNetLemmatizer()
@@ -56,7 +51,7 @@ def ht_extract(data):
     return hashtags
 
 def find_strings(data, expression):
-    "Returns a list of strings that match a given regular expression."
+    "Returns a list of words that match a given reg expression from a series."
     strings = []
     for tweet in data:
         string = re.findall(expression, tweet)
@@ -162,3 +157,7 @@ def clean_corpus_stem(data):
 def words(series):
     "Returns a list of words from a series of tweets"
     return [word for tweet in series for word in tweet.split()]
+
+def vocabulary(series):
+    "Returns a list of words from a series of tweets"
+    return set([word for tweet in series for word in tweet.split()])
