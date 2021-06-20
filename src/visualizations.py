@@ -78,6 +78,8 @@ def hashtag_c(df):
     sns.barplot(x=counts, y=tags, palette='Blues_r')
     plt.title('Counts of the Top 20 Hashtags')
     plt.xlabel('Count')
+    # plt.savefig('brand_emotions',  bbox_inches ="tight",\
+    #             pad_inches = .25, transparent = False)
     plt.show()
 
 def hashtag_p(df):
@@ -89,4 +91,20 @@ def hashtag_p(df):
     sns.barplot(x=percents, y=tags, palette='Blues_r')
     plt.title('Percentages of the Top 20 Hashtags')
     plt.xlabel('Percent')
+    # plt.savefig('brand_emotions',  bbox_inches ="tight",\
+    #             pad_inches = .25, transparent = False)
     plt.show()
+    
+    
+def top_word_list(data, n):
+    "returns the n most common words in a corpus."
+    processed_data = list(map(tokens, data))
+    word_li = word_list(processed_data)
+    freqdist = FreqDist(word_li)
+    most_common = freqdist.most_common(n)
+    top_word_list = [tup[0] for tup in most_common]
+    plt.figure(figsize=(15,7))
+    freqdist.plot(n)  
+    # plt.savefig('brand_emotions',  bbox_inches ="tight",\
+    #             pad_inches = .25, transparent = False)
+    print(top_word_list)

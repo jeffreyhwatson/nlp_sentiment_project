@@ -6,6 +6,9 @@ from nltk.probability import FreqDist
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import seaborn as sns
 
 
 def tokens(tweet):
@@ -70,17 +73,18 @@ def clean_tweet_lem(tweet):
     "Return a list of cleaned & lemmatized strings from a tweet."
     lemmatizer = WordNetLemmatizer()
     lemmas = []
-    subs = [(r'\{link\}', ''),
-            (r'http\S+', ''),
-            ('RT\s@[A-Za-z]+[A-Za-z0-9-_]+', ''),
-            ('@[A-Za-z]+[A-Za-z0-9-_]+', ''),
-            ('(&amp)', ''),
-            ('(&quot)', ''),
-            ('(&nbsp)', ''),
-            ('(&lt)', ''),
-            ('(&gt)', ''),
-            ('(RT\s)', '')
+    subs = [(r'\{link\}', ''), #removes the string '{link}'
+            (r'http\S+', ''), #removes urls
+            ('RT\s@[A-Za-z]+[A-Za-z0-9-_]+', ''), #removes RTs
+            ('@[A-Za-z]+[A-Za-z0-9-_]+', ''), #removes mentions
+            ('(&amp)', ''), #removes '(&amp)' &
+            ('(&quot)', ''), #removes '(&quot)' "
+            ('(&nbsp)', ''), #removes '(&nbsp)' non-breaking spaces
+            ('(&lt)', ''), #removes '(&lt)' less than
+            ('(&gt)', ''), #removes '(&gt)' greater than
+            ('(RT\s)', '') #removes edgecase RT
            ]
+             
     for pair in subs:
         tweet = re.sub(pair[0], pair[1], tweet)
     tweet = tokens(tweet)
@@ -161,3 +165,22 @@ def words(series):
 def vocabulary(series):
     "Returns a list of words from a series of tweets"
     return set([word for tweet in series for word in tweet.split()])
+
+def top_word_list(data, n, print_list=False, return_list=False):
+    """Plots a FreqDist plot, 
+       optionally prints and/or returns the n most common words in a corpus."""
+    processed_data = list(map(tokens, data))
+    word_li = word_list(processed_data)
+    freqdist = FreqDist(word_li)
+    most_common = freqdist.most_common(n)
+    top_word_list = [tup[0] for tup in most_common]
+    plt.figure(figsize=(15,7))
+    freqdist.plot(n)
+    # plt.savefig('title',  bbox_inches ="tight",\
+    #             pad_inches = .25, transparent = False)
+    if print_list == True:
+        print(top_word_list)
+    if return_list == True:
+        return top_word_list
+    
+    
