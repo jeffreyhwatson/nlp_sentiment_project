@@ -2,7 +2,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import nltk
+from nltk.probability import FreqDist
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk.tokenize import RegexpTokenizer
 
+from src import functions as fn
 
 def brand_freqs(df):
     brands = df.brand_product.value_counts(normalize=True)
@@ -57,14 +63,17 @@ def null_brand_emotions(df):
     
 def brand_emotions(df):
     bdf = df.groupby('brand_product')['emotion'].value_counts(normalize=True).unstack()
-    bdf.plot(kind='barh', figsize=(20,10), color=['ghostwhite', 'lightblue', 'steelblue', 'darkblue'], edgecolor='deepskyblue')
+    bdf.plot(kind='barh', figsize=(18,9), color=['lightblue',
+                                                  'white', 
+                                                  'steelblue'],
+             edgecolor='deepskyblue')
     
     plt.xticks(rotation=0)
     plt.title('Emotions by Brand/Product', fontsize=30)
     plt.xlabel('')
     plt.ylabel('')
     plt.legend(title='Emotion',
-               labels=['Unknown', 'Positive', 'Negative', 'Neutral'])
+               labels=['Positive', 'Neutral', 'Negative'])
     # plt.savefig('brand_emotions',  bbox_inches ="tight",\
     #             pad_inches = .25, transparent = False)
     plt.show()
@@ -97,14 +106,17 @@ def hashtag_p(df):
     
     
 def top_word_list(data, n):
-    "returns the n most common words in a corpus."
-    processed_data = list(map(tokens, data))
-    word_li = word_list(processed_data)
+    "Plots a bargraph of a FreqDist."
+    
+    processed_data = list(map(fn.tokens, data))
+    word_li = fn.word_list(processed_data)
     freqdist = FreqDist(word_li)
     most_common = freqdist.most_common(n)
-    top_word_list = [tup[0] for tup in most_common]
+    word_list = [tup[0] for tup in most_common]
+    word_counts = [tup[1] for tup in most_common]
     plt.figure(figsize=(15,7))
-    freqdist.plot(n)  
-    # plt.savefig('brand_emotions',  bbox_inches ="tight",\
+    sns.barplot(x=word_counts, y=word_list, palette='Blues_r')
+    plt.title(f'The Top {n} Words')
+    # plt.savefig('title',  bbox_inches ="tight",\
     #             pad_inches = .25, transparent = False)
-    print(top_word_list)
+    plt.show()
