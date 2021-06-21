@@ -153,4 +153,15 @@ def word_cloud(data, n):
     #             pad_inches = .25, transparent = False)
     plt.show()
     
-#     'Spectral'
+def confusion(model, X, y):
+    "Returns a confusion matrix."
+    
+    fig, ax = plt.subplots(figsize=(7, 7))
+    plot_confusion_matrix(model, X, y,
+                          cmap=plt.cm.Blues, 
+                          display_labels=['Negative', 'Positive'], ax=ax)
+    plt.title('Confusion Matrix')
+    plt.grid(False)
+#     plt.savefig('title',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
+    plt.show()
