@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from wordcloud import WordCloud
 import nltk
 from nltk.probability import FreqDist
 from nltk.corpus import stopwords
@@ -62,20 +63,31 @@ def null_brand_emotions(df):
     plt.show()
     
 def brand_emotions(df):
-    bdf = df.groupby('brand_product')['emotion'].value_counts(normalize=True).unstack()
-    bdf.plot(kind='barh', figsize=(18,9), color=['lightblue',
-                                                  'white', 
-                                                  'steelblue'],
-             edgecolor='deepskyblue')
-    
-    plt.xticks(rotation=0)
-    plt.title('Emotions by Brand/Product', fontsize=30)
-    plt.xlabel('')
+    emo = df.groupby('brand_product')['emotion']\
+            .value_counts().reset_index(name='count')
+    fig, ax = plt.subplots(figsize=(16,8))
+    sns.barplot(x='count', y ='brand_product',
+                data=emo,  hue='emotion', palette='Blues_r')
+    plt.title('Emotion Counts for Brand/Product')
     plt.ylabel('')
-    plt.legend(title='Emotion',
-               labels=['Positive', 'Neutral', 'Negative'])
+    plt.xlabel('')
     # plt.savefig('brand_emotions',  bbox_inches ="tight",\
-    #             pad_inches = .25, transparent = False)
+    # pad_inches = .25, transparent = False)
+    plt.show()
+
+def brand_emotion_n(df): 
+    emo = df.groupby('brand_product')['emotion']\
+            .value_counts(normalize=True).reset_index(name='count')
+    fig, ax = plt.subplots(figsize=(16,8))
+    sns.barplot(x='count', y ='brand_product', data=emo,
+                hue='emotion', palette='Blues_r')
+    plt.title('Emotion Percentages for Brand/Product')
+    plt.ylabel('')
+    plt.xlabel('')
+    plt.legend(title='emotion')
+#      bbox_to_anchor=(1.05, 1)
+    # plt.savefig('brand_emotions_n',  bbox_inches ="tight",\
+    # pad_inches = .25, transparent = False)
     plt.show()
 
 def hashtag_c(df):
@@ -106,7 +118,7 @@ def hashtag_p(df):
     
     
 def top_word_list(data, n):
-    "Plots a bargraph of a FreqDist."
+    "Plots a bargraph of the top words in a corpus."
     
     processed_data = list(map(fn.tokens, data))
     word_li = fn.word_list(processed_data)
@@ -120,3 +132,25 @@ def top_word_list(data, n):
     # plt.savefig('title',  bbox_inches ="tight",\
     #             pad_inches = .25, transparent = False)
     plt.show()
+    
+def word_cloud(data, n):
+    "Plots a word cloud of the top n words in a corpus."
+    
+    processed_data = list(map(fn.tokens, data))
+    word_li = fn.word_list(processed_data)
+    freqdist = FreqDist(word_li)
+    most_common = freqdist.most_common(n)
+    word_list = [tup[0] for tup in most_common]
+    word_counts = [tup[1] for tup in most_common]
+    word_dict = dict(zip(word_list, word_counts))
+    plt.figure(figsize=(14,7), facecolor='k')
+    wordcloud = WordCloud(colormap='Blues')\
+                          .generate_from_frequencies(word_dict)
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.tight_layout(pad=0)
+    # plt.savefig('title',  bbox_inches ="tight",\
+    #             pad_inches = .25, transparent = False)
+    plt.show()
+    
+#     'Spectral'

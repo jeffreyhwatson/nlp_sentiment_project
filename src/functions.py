@@ -230,23 +230,6 @@ def vocabulary(series):
     
     return set([word for tweet in series for word in tweet.split()])
 
-def top_word_list(data, n, print_list=False, return_list=False):
-    "Plots a FreqDist plot & can print and/or return the n most common words."
-    
-    processed_data = list(map(tokens, data))
-    word_li = word_list(processed_data)
-    freqdist = FreqDist(word_li)
-    most_common = freqdist.most_common(n)
-    top_word_list = [tup[0] for tup in most_common]
-    plt.figure(figsize=(15,7))
-    freqdist.plot(n)
-    # plt.savefig('title',  bbox_inches ="tight",\
-    #             pad_inches = .25, transparent = False)
-    if print_list == True:
-        print(top_word_list)
-    if return_list == True:
-        return top_word_list
-    
 def word_frequencies(data, n):
     processed_data = list(map(tokens, data))
     word_li = word_list(processed_data)
