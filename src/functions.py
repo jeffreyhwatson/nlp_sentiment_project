@@ -18,10 +18,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+from imblearn.over_sampling import SMOTE
+from imblearn.pipeline import make_pipeline as make_sm_pipeline
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import seaborn as sns
-
+from src import classes as c
 
 def pre_score(y_true, y_pred):
     "Precision scoring function for use in make_scorer."
@@ -41,6 +43,30 @@ def f_score(y_true, y_pred):
 # creating scorer object for pipelines
 f1 = make_scorer(f_score)
 
+def framer(df, col, li):
+    "Returns a data frame with selected columns."
+    
+    _list = [x for x in li if x not in col]
+    column_list = df.columns
+    cols = [x for x in column_list if x not in _list]
+    return df[cols]
+
+def Xy(df):
+    """Returns a data frame and target series."""
+    
+    X = df.drop('Target', axis=1)
+    y = df['Target']
+    return X, y
+
+def splitter(X, y):
+    """Returns a train/test split."""
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                        random_state=2021,
+                                                        stratify=y
+                                                   )
+    return  X_train, X_test, y_train, y_test
+
 def confusion(model, X, y):
     "Returns a confusion matrix plot."
     
@@ -54,15 +80,22 @@ def confusion(model, X, y):
 #                 pad_inches = .25, transparent = False)
     plt.show()
 
-def splitter(X, y, test_size):
-    """Returns a train/test split."""
-    X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                        test_size=test_size,
-                                                        random_state=2021,
-                                                        stratify=y
-                                                       )
-    return  X_train, X_test, y_train, y_test
-
+def subsplit_test(model, X_train, y_train):
+    """Returns train/test scores & a confusion matrix on subsplit test data."""
+    
+    modeling = c.Harness(f1)
+    Xs_train, Xs_test, ys_train, ys_test = splitter(X_train, y_train)
+    model.fit(Xs_train, ys_train)
+    train_score = f1_score(ys_train, model.predict(Xs_train))
+    test_score = f1_score(ys_test, model.predict(Xs_test))
+    confusion(model, Xs_train, ys_train)
+    confusion(model, Xs_test, ys_test)
+    recall_test = recall_score(ys_test, model.predict(Xs_test))
+    precision_test = precision_score(ys_test, model.predict(Xs_test))
+    report = pd.DataFrame([[train_score, test_score, recall_test, precision_test]],\
+                          columns=['Train F1', 'Test F1', 'Test Recall', 'Test Precision'])
+    return report    
+    
 def tokens(tweet):
     "Returns a list of tokens from a string"
     
