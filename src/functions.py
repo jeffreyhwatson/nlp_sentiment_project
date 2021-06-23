@@ -73,17 +73,39 @@ def confusion(model, X, y):
     fig, ax = plt.subplots(figsize=(7, 7))
     plot_confusion_matrix(model, X, y,
                           cmap=plt.cm.Blues, 
-                          display_labels=['Negative', 'Positive'], ax=ax)
+                          display_labels=['Positive', 'Negative'], ax=ax)
     plt.title('Confusion Matrix')
     plt.grid(False)
 #     plt.savefig('title',  bbox_inches ="tight",\
 #                 pad_inches = .25, transparent = False)
     plt.show()
 
+def confusion_report(model, X, y):
+    "Returns a confusion matrix plot."
+    
+    f1 = f1_score(y, model.predict(X))
+    recall = recall_score(y, model.predict(X))
+    precision = precision_score(y, model.predict(X))
+    report = pd.DataFrame([[f1, recall, precision]],\
+                          columns=['F1', 'Recall', 'Precision']) 
+    
+    fig, ax = plt.subplots(figsize=(7, 7))
+    plot_confusion_matrix(model, X, y,
+                          cmap=plt.cm.Blues, 
+                          display_labels=['Positive', 'Negative'], ax=ax)
+    plt.title('Confusion Matrix')
+    plt.grid(False)
+#     plt.savefig('title',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
+    plt.show()  
+    
+    return report 
+
+    
 def subsplit_test(model, X_train, y_train):
     """Returns train/test scores & a confusion matrix on subsplit test data."""
     
-    modeling = c.Harness(f1)
+#     modeling = c.Harness(f1)
     Xs_train, Xs_test, ys_train, ys_test = splitter(X_train, y_train)
     model.fit(Xs_train, ys_train)
     train_score = f1_score(ys_train, model.predict(Xs_train))
@@ -100,6 +122,7 @@ def tokens(tweet):
     "Returns a list of tokens from a string"
     
     stop_list = stopwords.words('english')
+    stop_list += ['sxsw']
     stop_set = set(stop_list)
     tokenizer = RegexpTokenizer(r'[a-zA-Z0-9]+')
     tokens = tokenizer.tokenize(tweet)
@@ -108,7 +131,7 @@ def tokens(tweet):
     return no_stopwords
 
 def word_list(data):
-    "Returns a list of words from a list of word lists"
+    "Returns a flattened list of words from a list of word lists"
     
     vocab = [word for tweet in data for word in tweet]
     return vocab
@@ -166,7 +189,9 @@ def clean_tweet_lem(tweet):
     
     lemmatizer = WordNetLemmatizer()
     lemmas = []
-    subs = [(r'\{link\}', ''), #removes the string '{link}'
+    subs = [
+            ('\s[2]+(?![a-z])', ' '), #removes stray 2's from ipad 2
+            (r'\{link\}', ''), #removes the string '{link}'
             (r'http\S+', ''), #removes urls
             ('RT\s@[A-Za-z]+[A-Za-z0-9-_]+', ''), #removes RTs
             ('@[A-Za-z]+[A-Za-z0-9-_]+', ''), #removes mentions
@@ -175,7 +200,7 @@ def clean_tweet_lem(tweet):
             ('(&nbsp)', ''), #removes '(&nbsp)' non-breaking spaces
             ('(&lt)', ''), #removes '(&lt)' less than
             ('(&gt)', ''), #removes '(&gt)' greater than
-            ('(RT\s)', '') #removes edgecase RT
+            ('(RT\s)', ''), #removes edgecase RT
            ]         
     for pair in subs:
         tweet = re.sub(pair[0], pair[1], tweet)
@@ -196,7 +221,8 @@ def clean_corpus_lem(data):
             ('(&nbsp)', ''),
             ('(&lt)', ''),
             ('(&gt)', ''),
-            ('(RT\s)', '')
+            ('(RT\s)', ''),
+            ('\s[2]+(?![a-z])', ''),
            ]
     for tweet in data:
         for pair in subs:
@@ -212,7 +238,7 @@ def clean_tweet_stem(tweet):
     
     ps = PorterStemmer()
     stems = []
-    subs = [(r'\{link\}', ''),
+    subs = subs = [(r'\{link\}', ''),
             (r'http\S+', ''),
             ('RT\s@[A-Za-z]+[A-Za-z0-9-_]+', ''),
             ('@[A-Za-z]+[A-Za-z0-9-_]+', ''),
@@ -221,7 +247,8 @@ def clean_tweet_stem(tweet):
             ('(&nbsp)', ''),
             ('(&lt)', ''),
             ('(&gt)', ''),
-            ('(RT\s)', '')
+            ('(RT\s)', ''),
+            ('\s[2]+(?![a-z])', ''),
            ]
     for pair in subs:
         tweet = re.sub(pair[0], pair[1], tweet)
@@ -233,7 +260,7 @@ def clean_corpus_stem(data):
     "Return a list of cleaned & stemmed words from a series of tweets."
     
     stripped_data = []
-    subs = [(r'\{link\}', ''),
+    subs = subs = [(r'\{link\}', ''),
             (r'http\S+', ''),
             ('RT\s@[A-Za-z]+[A-Za-z0-9-_]+', ''),
             ('@[A-Za-z]+[A-Za-z0-9-_]+', ''),
@@ -242,7 +269,8 @@ def clean_corpus_stem(data):
             ('(&nbsp)', ''),
             ('(&lt)', ''),
             ('(&gt)', ''),
-            ('(RT\s)', '')
+            ('(RT\s)', ''),
+            ('\s[2]+(?![a-z])', ''),
            ]
     for tweet in data:
         for pair in subs:
@@ -274,4 +302,11 @@ def word_frequencies(data, n):
     for word in top_n:
         normalized_frequency = word[1]/word_count
         print(f'{word[0] : <10}\t\t{round(normalized_frequency, 4): <10}')
-      
+
+def ngrammer(series, n):
+    n_grams = []
+    for tweet in series:
+        words = tweet.split()
+        n_gram = list(ngrams(words, n=n))
+        n_grams.append(n_gram)
+    return n_grams
