@@ -122,7 +122,7 @@ def tokens(tweet):
     "Returns a list of tokens from a string"
     
     stop_list = stopwords.words('english')
-    stop_list += ['sxsw']
+    stop_list += ['sxsw', 'sxswi']
     stop_set = set(stop_list)
     tokenizer = RegexpTokenizer(r'[a-zA-Z0-9]+')
     tokens = tokenizer.tokenize(tweet)
@@ -270,7 +270,7 @@ def clean_corpus_stem(data):
             ('(&lt)', ''),
             ('(&gt)', ''),
             ('(RT\s)', ''),
-            ('\s[2]+(?![a-z])', ''),
+            ('\s[2]+(?![a-z])', '')
            ]
     for tweet in data:
         for pair in subs:
