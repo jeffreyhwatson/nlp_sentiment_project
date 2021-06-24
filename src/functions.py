@@ -100,23 +100,7 @@ def confusion_report(model, X, y):
     plt.show()  
     
     return report 
-
-    
-def subsplit_test(model, X_train, y_train):
-    """Returns train/test scores & a confusion matrix on subsplit test data."""
-    
-#     modeling = c.Harness(f1)
-    Xs_train, Xs_test, ys_train, ys_test = splitter(X_train, y_train)
-    model.fit(Xs_train, ys_train)
-    train_score = f1_score(ys_train, model.predict(Xs_train))
-    test_score = f1_score(ys_test, model.predict(Xs_test))
-    confusion(model, Xs_train, ys_train)
-    confusion(model, Xs_test, ys_test)
-    recall_test = recall_score(ys_test, model.predict(Xs_test))
-    precision_test = precision_score(ys_test, model.predict(Xs_test))
-    report = pd.DataFrame([[train_score, test_score, recall_test, precision_test]],\
-                          columns=['Train F1', 'Test F1', 'Test Recall', 'Test Precision'])
-    return report    
+   
     
 def tokens(tweet):
     "Returns a list of tokens from a string"
@@ -201,6 +185,9 @@ def clean_tweet_lem(tweet):
             ('(&lt)', ''), #removes '(&lt)' less than
             ('(&gt)', ''), #removes '(&gt)' greater than
             ('(RT\s)', ''), #removes edgecase RT
+            ('([0-9]+)(?![a-zA-Z])', ''),
+            ('(Shit|shit|SHIT)', 'sh1t'),
+            ('(Fuck|fuck|FUCK)', 'f0ck')
            ]         
     for pair in subs:
         tweet = re.sub(pair[0], pair[1], tweet)
@@ -222,7 +209,7 @@ def clean_corpus_lem(data):
             ('(&lt)', ''),
             ('(&gt)', ''),
             ('(RT\s)', ''),
-            ('\s[0-9]+(?![a-z])', ''),
+            ('([0-9]+)(?![a-zA-Z])', ''),
            ]
     for tweet in data:
         for pair in subs:
@@ -310,3 +297,30 @@ def ngrammer(series, n):
         n_gram = list(ngrams(words, n=n))
         n_grams.append(n_gram)
     return n_grams
+
+def cloud_cleaner_lem(data):
+    "Return a list of cleaned & lemmatized words from a series of tweets."
+    
+    stripped_data = []
+    subs = [(r'\{link\}', ''),
+            (r'http\S+', ''),
+            ('RT\s@[A-Za-z]+[A-Za-z0-9-_]+', ''),
+            ('@[A-Za-z]+[A-Za-z0-9-_]+', ''),
+            ('(&amp)', ''),
+            ('(&quot)', ''),
+            ('(&nbsp)', ''),
+            ('(&lt)', ''),
+            ('(&gt)', ''),
+            ('(RT\s)', ''),
+            ('([0-9]+)(?![a-zA-Z])', ''),
+            ('(Shit|shit|SHIT)', 'sh1t'),
+            ('(Fuck|fuck|FUCK)', 'f0ck')
+           ]
+    for tweet in data:
+        for pair in subs:
+            tweet = re.sub(pair[0], pair[1], tweet)
+        stripped_data.append(tweet)
+    stripped = pd.Series(stripped_data)
+    processed_data = list(map(tokens, stripped))
+    lemmas = lemmatize(processed_data)
+    return lemmas
