@@ -222,7 +222,7 @@ def clean_corpus_lem(data):
             ('(&lt)', ''),
             ('(&gt)', ''),
             ('(RT\s)', ''),
-            ('\s[2]+(?![a-z])', ''),
+            ('\s[0-9]+(?![a-z])', ''),
            ]
     for tweet in data:
         for pair in subs:
@@ -248,7 +248,7 @@ def clean_tweet_stem(tweet):
             ('(&lt)', ''),
             ('(&gt)', ''),
             ('(RT\s)', ''),
-            ('\s[2]+(?![a-z])', ''),
+            ('\s[0-9]+(?![a-z])', ''),
            ]
     for pair in subs:
         tweet = re.sub(pair[0], pair[1], tweet)
