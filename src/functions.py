@@ -1,38 +1,22 @@
-import string, re
+import re
+
+from src import classes as c
+
 import pandas as pd
 import numpy as np
+
 import nltk
 from nltk.probability import FreqDist
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
-from sklearn.base import clone
-from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import (StratifiedKFold, train_test_split,
-                                     cross_val_score)
-from sklearn.feature_extraction.text import (CountVectorizer, TfidfVectorizer,
-                                             TfidfTransformer)
+
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import (f1_score, recall_score, precision_score,
                              make_scorer, plot_confusion_matrix)
-from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from imblearn.over_sampling import SMOTE
-from imblearn.pipeline import make_pipeline as make_sm_pipeline
+
 import matplotlib.pyplot as plt
-from matplotlib import cm
-import seaborn as sns
-from src import classes as c
-
-def pre_score(y_true, y_pred):
-    "Precision scoring function for use in make_scorer."
-    
-    precision = precision_score(y_true, y_pred, zero_division=0)
-    return precision
-
-# creating scorer object for pipelines
-precision = make_scorer(pre_score)
 
 def f_score(y_true, y_pred):
     "F1 scoring function for use in make_scorer."
@@ -43,21 +27,6 @@ def f_score(y_true, y_pred):
 # creating scorer object for pipelines
 f1 = make_scorer(f_score)
 
-def framer(df, col, li):
-    "Returns a data frame with selected columns."
-    
-    _list = [x for x in li if x not in col]
-    column_list = df.columns
-    cols = [x for x in column_list if x not in _list]
-    return df[cols]
-
-def Xy(df):
-    """Returns a data frame and target series."""
-    
-    X = df.drop('Target', axis=1)
-    y = df['Target']
-    return X, y
-
 def splitter(X, y):
     """Returns a train/test split."""
     
@@ -66,19 +35,6 @@ def splitter(X, y):
                                                         stratify=y
                                                    )
     return  X_train, X_test, y_train, y_test
-
-def confusion(model, X, y):
-    "Returns a confusion matrix plot."
-    
-    fig, ax = plt.subplots(figsize=(7, 7))
-    plot_confusion_matrix(model, X, y,
-                          cmap=plt.cm.Blues, 
-                          display_labels=['Positive', 'Negative'], ax=ax)
-    plt.title('Confusion Matrix')
-    plt.grid(False)
-#     plt.savefig('title',  bbox_inches ="tight",\
-#                 pad_inches = .25, transparent = False)
-    plt.show()
 
 def confusion_report(model, X, y):
     "Returns a confusion matrix plot."
@@ -100,8 +56,7 @@ def confusion_report(model, X, y):
     plt.show()  
     
     return report 
-   
-    
+      
 def tokens(tweet):
     "Returns a list of tokens from a string"
     

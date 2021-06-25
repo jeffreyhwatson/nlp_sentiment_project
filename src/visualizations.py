@@ -5,9 +5,6 @@ import seaborn as sns
 from wordcloud import WordCloud
 import nltk
 from nltk.probability import FreqDist
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer, WordNetLemmatizer
-from nltk.tokenize import RegexpTokenizer
 
 from src import functions as fn
 
@@ -85,7 +82,6 @@ def brand_emotion_n(df):
     plt.ylabel('')
     plt.xlabel('')
     plt.legend(title='emotion')
-#      bbox_to_anchor=(1.05, 1)
     # plt.savefig('brand_emotions_n',  bbox_inches ="tight",\
     # pad_inches = .25, transparent = False)
     plt.show()
@@ -151,17 +147,4 @@ def word_cloud(data, n):
     plt.tight_layout(pad=0)
     # plt.savefig('title',  bbox_inches ="tight",\
     #             pad_inches = .25, transparent = False)
-    plt.show()
-    
-def confusion(model, X, y):
-    "Returns a confusion matrix."
-    
-    fig, ax = plt.subplots(figsize=(7, 7))
-    plot_confusion_matrix(model, X, y,
-                          cmap=plt.cm.Blues, 
-                          display_labels=['Negative', 'Positive'], ax=ax)
-    plt.title('Confusion Matrix')
-    plt.grid(False)
-#     plt.savefig('title',  bbox_inches ="tight",\
-#                 pad_inches = .25, transparent = False)
     plt.show()
