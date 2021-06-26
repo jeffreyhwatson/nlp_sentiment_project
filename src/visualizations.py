@@ -148,3 +148,97 @@ def word_cloud(data, n):
     # plt.savefig('title',  bbox_inches ="tight",\
     #             pad_inches = .25, transparent = False)
     plt.show()
+
+def base_coefs(pipe):
+    coefs = pipe[1].coef_.flatten()
+    features = pipe[0].get_feature_names()
+    features = fn.feat_cleaner(features)
+    zips = zip(features, coefs)
+    coef_df = pd.DataFrame(zips, columns=['feature', 'value'])
+    coef_df["abs_value"] = coef_df["value"].apply(lambda x: abs(x))
+    coef_df["colors"] = coef_df["value"].apply(lambda x: "darkblue" if x > 0 else "skyblue")
+    coef_df = coef_df.sort_values("abs_value", ascending=False)
+
+    fig, ax = plt.subplots(1, 1, figsize=(20, 8))
+    sns.barplot(x="feature",
+                y="value",
+                data=coef_df.head(30),
+               palette=coef_df.head(30)["colors"])
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=80, fontsize=20)
+    ax.set_title("Dark Blue = Negative Sentiment Features", fontsize=20)
+    plt.suptitle("Top 30 Features", fontsize=30)
+    ax.set_ylabel("Coefs", fontsize=22)
+    ax.set_xlabel("Feature Name", fontsize=22)
+    # plt.savefig('base_coeff',  bbox_inches ="tight",\
+    #             pad_inches = .25, transparent = False)
+    plt.show()
+    
+def base_neg_odds(pipe):
+    coefs = pipe[1].coef_.flatten()
+    features = pipe[0].get_feature_names()
+    features = fn.feat_cleaner(features)
+
+    odds = np.exp(coefs)
+    odds_df = pd.DataFrame(odds, 
+                 features, 
+                 columns=['odds'])\
+                .sort_values(by='odds', ascending=False)
+
+    top10_neg_odds = odds_df.head(10).reset_index()
+
+    fig, ax = plt.subplots(figsize =(20, 8))
+    sns.barplot(x='index',y='odds', data=top10_neg_odds, palette='Blues_r',
+                edgecolor='deepskyblue')
+    plt.title('Relative Odds For The Top 20 Negative Features')                                                 
+    plt.xlabel('')
+    plt.ylabel('')
+    plt.xticks(rotation=80)
+    plt.legend(title='Odds That Negative Sentiment Is More Likely', labels=['Multiple'])
+    # plt.savefig('Baseline_Negative',  bbox_inches ="tight",\
+    #             pad_inches = .25, transparent = False)
+    plt.show()
+
+    
+def base_pos_odds(pipe):
+    coefs = pipe[1].coef_.flatten()
+    features = pipe[0].get_feature_names()
+    features = fn.feat_cleaner(features)
+
+    odds = np.exp(coefs)
+    odds_df = pd.DataFrame(odds, 
+                 features, 
+                 columns=['odds'])\
+                .sort_values(by='odds', ascending=False)
+    
+    top10_pos_odds = odds_df.tail(10).reset_index()
+
+    top10_pos_odds['odds'] = 1/top10_pos_odds['odds']
+
+    fig, ax = plt.subplots(figsize =(20, 8))
+    sns.barplot(x='index',y='odds', data=top10_pos_odds, palette='Blues', edgecolor='deepskyblue')
+    plt.title('Relative Odds For Top 10 Positive Features')                                                 
+    plt.xlabel('')
+    plt.xticks(rotation=80)
+    plt.legend(title='Odds That a Positive Sentiment is More Likely', labels=['Multiple'])
+    # plt.savefig('Baseline_Positive',  bbox_inches ="tight",\
+    #             pad_inches = .25, transparent = False)
+    plt.show()
+    
+def feature_plot(pipe):
+    """Returns feature importances of a model."""
+    
+    features = list(pipe[0].get_feature_names())
+    features = fn.feat_cleaner(features)
+    importances = pipe[1].feature_importances_
+    sorted_importances = sorted(list(zip(features, importances)),
+                                key=lambda x: x[1], reverse=True)[:25]
+    x = [val[0] for val in sorted_importances]
+    y = [val[1] for val in sorted_importances]
+    
+    plt.figure(figsize=(20,8))
+    sns.barplot(x=x, y=y, palette='Blues_r', edgecolor='deepskyblue')
+    plt.xticks(rotation=80, fontsize=20)
+    plt.title('Feature Importances', fontsize=30)
+#     plt.savefig('Feature_Imp',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
+    plt.show()

@@ -279,3 +279,18 @@ def cloud_cleaner_lem(data):
     processed_data = list(map(tokens, stripped))
     lemmas = lemmatize(processed_data)
     return lemmas
+
+def feat_cleaner(data):
+    "Return a list of cleaned & lemmatized words from a series of tweets."
+    
+    stripped_data = []
+    subs = [
+            ('(Shit|shit|SHIT)', 'sh1t'),
+            ('(Fuck|fuck|FUCK)', 'f0ck')
+           ]
+    for tweet in data:
+        for pair in subs:
+            tweet = re.sub(pair[0], pair[1], tweet)
+        stripped_data.append(tweet)
+        
+    return stripped_data
