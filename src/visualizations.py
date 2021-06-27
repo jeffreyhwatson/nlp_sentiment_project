@@ -40,27 +40,6 @@ def emotion_freqs(df):
     #             pad_inches = .25, transparent = False)
     plt.show()
 
-def emotion_freqs_aug(df):
-    df['emotion'] = df['emotion'].replace([1, 0, 2],
-                                          ['Negative',
-                                           'Positive',
-                                           'Neutral'],
-                                         )
-    emotion = df.emotion.value_counts(normalize=True)
-    emotion_df = pd.DataFrame(emotion)
-    emotion_df.reset_index(inplace=True)
-    emotion_df.columns = ['Emotion', 'Share']
-
-    fig, ax = plt.subplots(figsize=(20,8))
-    sns.barplot(x='Share', y='Emotion', edgecolor='deepskyblue', palette='Blues_r', data=emotion_df)
-    ax.tick_params(labelsize=20)
-    plt.title('Emotion Share of Data', fontsize=30)
-    plt.xlabel('', fontsize=20)
-    plt.ylabel("")
-    # plt.savefig('emotion_share',  bbox_inches ="tight",\
-    #             pad_inches = .25, transparent = False)
-    plt.show()   
-
 def null_brand_emotions(df):
     null_brand_emotion = df[(df['brand_product'].isna()) &\
      (df['emotion'] != 'No emotion toward brand or product' )]
