@@ -95,16 +95,6 @@ def stemmatize(processed_data):
         stemmed.append(stems)    
     return stemmed
 
-def ht_extract(data):
-    "Returns a list of hashtags from a series of tweets."
-    
-    hashlists = []
-    for element in data:
-        hashtag = re.findall(r'\B#\w*[a-zA-Z]+\w*', element)
-        hashlists.append(hashtag)
-    hashtags = [hashtag.lower() for h_list in hashlists for hashtag in h_list]
-    return hashtags
-
 def find_strings(data, expression):
     "Returns a list of words that match a given reg expression from a series."
     
