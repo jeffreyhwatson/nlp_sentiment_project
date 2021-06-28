@@ -36,8 +36,8 @@ def emotion_freqs(df):
     plt.title('Emotion Share of Data', fontsize=30)
     plt.xlabel('', fontsize=20)
     plt.ylabel("")
-    # plt.savefig('emotion_share',  bbox_inches ="tight",\
-    #             pad_inches = .25, transparent = False)
+#     plt.savefig('aug_emotion_share',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
     plt.show()
 
 def null_brand_emotions(df):
@@ -68,8 +68,8 @@ def brand_emotions(df):
     plt.title('Emotion Counts for Brand/Product')
     plt.ylabel('')
     plt.xlabel('')
-    # plt.savefig('brand_emotions',  bbox_inches ="tight",\
-    # pad_inches = .25, transparent = False)
+#     plt.savefig('brand_emotions',  bbox_inches ="tight",\
+#     pad_inches = .25, transparent = False)
     plt.show()
 
 def brand_emotion_n(df): 
@@ -82,8 +82,8 @@ def brand_emotion_n(df):
     plt.ylabel('')
     plt.xlabel('')
     plt.legend(title='emotion')
-    # plt.savefig('brand_emotions_n',  bbox_inches ="tight",\
-    # pad_inches = .25, transparent = False)
+#     plt.savefig('brand_emotions_n',  bbox_inches ="tight",\
+#     pad_inches = .25, transparent = False)
     plt.show()
 
 def hashtag_c(df):
@@ -145,8 +145,8 @@ def word_cloud(data, n):
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
     plt.tight_layout(pad=0)
-    # plt.savefig('title',  bbox_inches ="tight",\
-    #             pad_inches = .25, transparent = False)
+#     plt.savefig('aug_pos',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
     plt.show()
 
 def base_coefs(pipe):
