@@ -9,15 +9,30 @@
 2. [Final Report](./notebooks/report/report.ipynb)
 3. [Presentation Slides](./reports/presentation.pdf)
 ***
-### Setup Instructions
+### Repository Structure
 
+```
+├── README.md
+├── data
+│   ├── processed
+│   └── raw
+├── models
+├── notebooks
+│   ├── exploratory
+│   └── report
+├── reports
+│   └── figures   
+└── src
+```
+***
+### Setup Instructions
 To setup the project environment, `cd` into the project folder and run `conda env create --file
 nlp_project.yml` in your terminal. Next, run `conda activate nlp_project`.
 ***
 ## Overview
-In recent years, Twitter has emerged as a prominent platform for marketing and targeted advertising. It is also a valuable conduit for the collection of consumer data, and natural language processing (NLP) can provided solutions to companies seeking to track consumer sentiment regarding their brands and products. This project developed and implemented an NLP model to classify tweets as negative or positive. 
+In recent years, Twitter has emerged as a prominent platform for marketing and targeted advertising. It is also a valuable conduit for the collection of consumer data, and natural language processing (NLP) methods can provide a solution for companies seeking to track consumer sentiment with respect to their brands and products. This project developed and implemented several NLP models to classify tweets as negative or positive. 
 
-Data cleaning and augmentation, EDA, modeling, and evaluation were performed, and a random forest classifier was chosen as the the final model for the project. Because we wanted to avoid both false positives and false negatives for this project, an accuracy measure of F1 was employed since it is sensitive to both types of error. Since an F1 score is a mix of both precision and recall (F1=1 means perfect recall and precision), interpretation of the results is more easily described in terms of recall and precision. 
+Data cleaning and augmentation, EDA, modeling, and evaluation were performed, and a random forest classifier was chosen as the the final model for the project. Because we wanted to avoid both false positives and false negatives for this project, an accuracy measure of F1 was employed since it is sensitive to both types of error. An F1 score is a mix of both precision and recall (F1=1 means perfect recall and precision), so interpretation of the results is more easily described in terms of recall and precision. 
 
 An F1 accuracy score of 0.89 (recall=.85, precision=.94) was attained at the end of the project's modeling process. The recall score of .85 meant that 85% of negative tweets were correctly classified as negative, while the precision score of .94 indicated that 94% of tweets classified as negative were truly negative. 
 
@@ -37,15 +52,14 @@ Data cleaning details for the project can be found here:
 
 A master cleaning function was use to lower case all letters, remove punctuation, urls, retweets, mentions, other unwanted substrings ('{link}', &amp, &quot, &nbsp, &lt, &gt), and return a list of clean and regularized (lemmas and stems) tweets.
 ***
-## Exploring the  Data (Highlights From the EDA)
+# Exploring the  Data (Highlights From the EDA)
 
-EDA for the project is detailed in the following notebook:
-
-[Data Cleaning/EDA Notebook](./notebooks/exploratory/cleaning_eda.ipynb)
+EDA for the project is detailed in the following notebook: [Data Cleaning/EDA Notebook](./notebooks/exploratory/cleaning_eda.ipynb)
 ***
 ## Emotions by Brand
 ![graph1](./reports/figures/base_brand_emotions.png)
 <font size="4">Apple dominates the tweets with `iPad`, `Apple`, and `iPad or iPhone App` being the subjects of the most tweets.</font>
+
 ![graph2](./reports/figures/base_brand_emotions_n.png)
  <font size="4">Tweets about product and brands have a strong postive skew, with the only exception being tweets about the iPhone. `iPhone` has a much more mixed ratio of postives and negatives</font>
 ***
@@ -61,10 +75,10 @@ The severe class imbalance in the original data was problematic for model develo
 
 <font size="4">`Negative`                   accounts for 6% of the data.</font>
 
-Positive and negative tweets are both are under-represented in the data, with negative tweets being extremely under-represented (an order of magnitude less common than the other two classes).
+Positive and negative tweets are both are under-represented in the original data, with negative tweets being extremely under-represented.
 
 ### Augmented Dataset Class Balance
-![graph7](./reports/figures/aug_emotion_share.png)
+![graph4](./reports/figures/aug_emotion_share.png)
 
 <font size="4">`Neutral` accounts for 48% of the data.</font>
 
@@ -73,51 +87,58 @@ Positive and negative tweets are both are under-represented in the data, with ne
 <font size="4">`Negative`                   accounts for 26% of the data.</font>
 
 The class balance of the augmented data is much more resonable for modeling purposes.
-
+***
 ## Word Clouds
-Word clouds provide an intuitve understanding of the relative frequencies of words in the data. The tweets were divided into positive, negative, and neutral, and word clouds were formed for each of the emotins. 
+Word clouds help to display the relative frequencies of words in the data in an intuitive way. The tweets were divided into positive, negative, and neutral, and word clouds were formed for each of the emotions. 
 
 ### Positive Word Cloud
 The size of the word indicates its relative frequency in `Positive` tweets.
-![graph8](./reports/figures/aug_pos.png)
+![graph5](./reports/figures/aug_pos.png)
 
 <font size="4">`ipad`, and `apple` are the most used words in `Positive` tweets.</font>
 
 ### Negative Word Cloud
 The size of the word indicates its relative frequency in `Negative` tweets.
-![graph9](./reports/figures/aug_neg.png)
+![graph6](./reports/figures/aug_neg.png)
 
 <font size="4">`unhappy`, `apple`, and `iphone` are the most used words in `Negative` tweets.</font>
 
 ### Neutral Word Cloud
 The size of the word indicates its relative frequency in `Neutral` tweets.
-![graph10](./reports/figures/aug_neu.png)
+![graph7](./reports/figures/aug_neu.png)
 
-<font size="4">`google` and `ipad`, are the most used words in `Neutral` tweets.</font>
+<font size="4">`google`, `apple`, and `ipad` are the most used words in `Neutral` tweets.</font>
 ***
-## Modeling
-### Baseline
+# Modeling
+The data was filtered down to negative and positive tweets, and various binary classifiers were trained and tested during the modeling process. The results of these experiments are detailed below.
+
+## Baseline Model:
 A baseline model was created from a pipeline consisting of a TFIDF vectorizer and a logistic regression classifier.
 
-### Baseline Scores: F1 = 0.14, Recall = .08, Precision = .85
+![graph8](./reports/figures/baseline_cm.png)
 
-![graph6](./reports/figures/Baseline_CM.png)
+<font size="4">Baseline Scores: F1 = 0.14, Recall = .08, Precision = .85</font>
 
 #### Score Interpretation
-Since we want to avoid both false positives and false negatives for this project, a metric of F1 was employed because it is sensitive to both types of error. Also, because F1 is a mix of both precision and recall, the interpretation of the results is more easily described in terms of recall and precision. Overall, the performance of the model very poor.
-- From the confusion matrix we see that the baseline model is classifying nearly everything as the majority class.
+Since F1 is a mix of both precision and recall, the interpretation of the results is more easily described in terms of recall and precision.
+- The confusion matrix shows that the baseline model is classifying nearly everything as the majority class.
 - A recall score of .08 means that 8% of negative tweets were correctly classified as negative. 
 - A precision score of .85 indicates that 85% of tweets classified as negative were truly negative.
 
-#### Baseline Features
+Overall, the performance of the model very poor.
 
-![graph7](./reports/figures/Baseline_Positive.png)
+#### Feature Coefficients
 
-#### Baseline Relative Odds
+![graph9](./reports/figures/base_coeff.png)
 
-![graph7](./reports/figures/Baseline_Positive.png)
+#### Notes on the Features
+`headache`, `long`, and `fail` are the top features driving `Negative` classifications, while `free`, `new`, and `great` drive `Positive` classifications.
 
-![graph8](./reports/figures/Baseline_Negative.png)
+#### Relative Odds
+
+![graph10](./reports/figures/baseline_negative.png)
+
+![graph11](./reports/figures/baseline_positive.png)
 
 #### Interpretation of the Odds
 If the assumptions of logistic regression were met by the model, we could numerically quantify the effect of each feature on the model. However, since it is beyond the scope of the project to check that the model meets the underlying assumptions of logistic regression, the most we can say about the features above are their relative importances to the model. A higher bar means more importance of the feature to the model. 
@@ -129,78 +150,75 @@ The poor performance of the baseline model was largely due the the extreme class
 
 In the end, additional negative sentiment data obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets) and [data.world](https://data.world/crowdflower/apple-twitter-sentiment) were used to augment the baseline data. This new data greatly imroved the performance of all the models and the final results are detailed below.
 
-## Alternate Model: Tuned Logisitic Regression Classifier
+## Alternative Final Model:
+<font size="4">Logistic Regression CLF Tuned on Augmented Lemmatized Data</font>
 
-### Scores: F1= 0.89, Recall=.83, Precision=.97 
+A TFIDF vectorizer was used for feature engineering and vectorization.
 
-![graph9](./reports/figures/LR_Final_CM.png)
+![graph12](./reports/figures/tuned_logreg_cm.png)
+
+<font size="4">Alternative Final Model Metrics: F1=0.89, Recall=0.83, Precision=0.97</font>
 
 #### Score Interpretation
-From the confusion matrix we see that the model still has a little trouble classifying negatives relative to positives, but the overall performance is acceptable.
+From the confusion matrix we see that the model still has a little more trouble classifying negatives relative to positives, but the overall performance is acceptable.
 
 - The augmentation of the dataset has greatly improved model performance.
 - A recall score of .83 means that 83% of negative tweets were correctly classified as negative. 
 - A precision score of .97 indicates that 94% of tweets classified as negative were truly negative.
 
-#### Relevant Features
+#### Feature Coefficients
+![graph13](./reports/figures/tuned_coeff.png)
 
-![graph10](./reports/figures/LR_Final_Positive.png)
+#### Notes on the Features
 
-![graph11](./reports/figures/LR_Final_Negative.png)
+`Google` & `Ipad` have largest coefficients driving positive classifications, while `unhappy` and `aapl` have the largest coefficients driving negative classifications. Most brand signifiers are still associated with positive classifications.
+
+#### Relative Odds
+![graph14](./reports/figures/tuned_negative.png)
+
+![graph15](./reports/figures/tuned_positive.png)
 
 #### Interpretation of the Odds
 A higher bar means a greater relative importance of the feature to the model. Again, `Google` and `Ipad` are driving positive classifications, while `unhappy` and `aapl` are driving negative classifications. `Google` is the greatest positve factor followed closely by `Ipad`. `Unhappy` increases the odds of a negative classification most significantly.
 
 
-## Final Model:  Tuned Random Forest Classifier
+## Final Model:  
+<font size="4">Tuned Random Forest Classifier</font>
 
-![graph12](./reports/figures/RF_Final_CM.png)
+A TFIDF vectorizer was used for feature engineering and vectorization.
 
-### Final Model Scores:
+![graph16](./reports/figures/tuned_rf_cm.png)
+
 <font size="4">Metrics: F1=0.89, Recall=0.85, Precision=0.94</font>
 
 #### Score Interpretation
-From the confusion matrix we see that the MVP model still has a little trouble classifying negatives relative to positives, but the overall performance is acceptable.
+From the confusion matrix we see that the MVP model still has a little more trouble classifying negatives relative to positives, but the overall performance is acceptable.
 
 - The performance of the baseline model has been greatly improved by the addition of new minority class data. 
 - A recall score of .85 means that 85% of negative tweets were correctly classified as negative. 
 - A precision score of .94 indicates that 94% of tweets classified as negative were truly negative.
 
 #### Feature Importances
-![graph13](./reports/figures/RF_Final_Feature_Imp.png)
+![graph17](./reports/figures/feature_imp.png)
 
 #### Notes on the Features
 
-`Ipad` and `unhappy` are again the most important tokens driving the model, and six of the top ten features are brand signifiers.
+`Ipad` and `unhappy` are again the most important words driving the model, and six of the top ten features are brand or product signifiers.
 
-## Conclusion
-A random forest classifier with a F1 accuracy score of 0.89 (recall=.85, precision=.94) was attained at the end of the modeling process and chosen as the final model of the project. The recall score of .85 meant that 85% of negative tweets were correctly classified as negative, and the precision score of .94 indicated that 94% of tweets classified as negative were truly negative. An alternate logistic regression model with an F1 accuracy score of 0.89 (recall=.83, precision=.97) is also available for use by interested parties.
+# Conclusion
+A random forest classifier with a F1 accuracy score of 0.89 (recall=.85, precision=.94) was attained at the end of the modeling process and chosen as the final model of the project. The recall score of .85 meant that 85% of negative tweets were correctly classified as negative, and the precision score of .94 indicated that 94% of tweets classified as negative were truly negative. 
 
-## Next Steps
+An alternate logistic regression model with an F1 accuracy score of 0.89 (recall=.83, precision=.97) is also available for use by interested parties.
+
+# Next Steps
 Next steps for the project include:
 - Tuning an XGBoost classifier. 
 - Tuning an RNN classifier.
 - Implementing a multiclass classifier and adding neutral tweets to the model. 
 - Further investigating the logistic regression model's adherence to the underlying assumptions of logistic regression.
 
-## For More Information
+# For More Information
 
 Please review our full analysis in our [Jupyter Notebook](./notebooks/report/report.ipynb) or our [presentation](./reports/presentation.pdf).
 
 For any additional questions, please contact **Jeffrey Hanif Watson jeffrey.h.watson@protonmail.com**
-
-## Repository Structure
-
-```
-├── README.md
-├── data
-│   ├── processed
-│   └── raw
-├── models
-├── notebooks
-│   ├── exploratory
-│   └── report
-├── reports
-│   └── figures   
-└── src
-```

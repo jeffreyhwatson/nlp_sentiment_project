@@ -51,7 +51,7 @@ def confusion_report(model, X, y):
                           display_labels=['Positive', 'Negative'], ax=ax)
     plt.title('Confusion Matrix')
     plt.grid(False)
-#     plt.savefig('title',  bbox_inches ="tight",\
+#     plt.savefig('tuned_rf_cm',  bbox_inches ="tight",\
 #                 pad_inches = .25, transparent = False)
     plt.show()  
     

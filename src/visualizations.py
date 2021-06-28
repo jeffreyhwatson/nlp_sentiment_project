@@ -169,8 +169,8 @@ def base_coefs(pipe):
     plt.suptitle("Top 30 Features", fontsize=30)
     ax.set_ylabel("Coefs", fontsize=22)
     ax.set_xlabel("Feature Name", fontsize=22)
-    # plt.savefig('base_coeff',  bbox_inches ="tight",\
-    #             pad_inches = .25, transparent = False)
+#     plt.savefig('tuned_coeff',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
     plt.show()
     
 def base_neg_odds(pipe):
@@ -189,13 +189,13 @@ def base_neg_odds(pipe):
     fig, ax = plt.subplots(figsize =(20, 8))
     sns.barplot(x='index',y='odds', data=top10_neg_odds, palette='Blues_r',
                 edgecolor='deepskyblue')
-    plt.title('Relative Odds For The Top 20 Negative Features')                                                 
+    plt.title('Relative Odds For The Top 10 Negative Features')                                                 
     plt.xlabel('')
     plt.ylabel('')
     plt.xticks(rotation=80)
     plt.legend(title='Odds That Negative Sentiment Is More Likely', labels=['Multiple'])
-    # plt.savefig('Baseline_Negative',  bbox_inches ="tight",\
-    #             pad_inches = .25, transparent = False)
+#     plt.savefig('base_negative',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
     plt.show()
 
     
@@ -221,8 +221,8 @@ def base_pos_odds(pipe):
     plt.ylabel('')
     plt.xticks(rotation=80)
     plt.legend(title='Odds That a Positive Sentiment is More Likely', labels=['Multiple'])
-    # plt.savefig('Baseline_Positive',  bbox_inches ="tight",\
-    #             pad_inches = .25, transparent = False)
+#     plt.savefig('tuned_positive',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
     plt.show()
     
 def feature_plot(pipe):
@@ -240,6 +240,6 @@ def feature_plot(pipe):
     sns.barplot(x=x, y=y, palette='Blues_r', edgecolor='deepskyblue')
     plt.xticks(rotation=80, fontsize=20)
     plt.title('Feature Importances', fontsize=30)
-#     plt.savefig('Feature_Imp',  bbox_inches ="tight",\
+#     plt.savefig('feature_imp',  bbox_inches ="tight",\
 #                 pad_inches = .25, transparent = False)
     plt.show()
