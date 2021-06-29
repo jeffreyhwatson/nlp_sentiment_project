@@ -43,7 +43,7 @@ def emotion_freqs(df):
 def null_brand_emotions(df):
     null_brand_emotion = df[(df['brand_product'].isna()) &\
      (df['emotion'] != 'No emotion toward brand or product' )]
-    emotion = null_brand_emotion.emotion.value_counts()
+    emotion = null_brand_emotion.emotion.value_counts(normalize=True)
     emotion_df = pd.DataFrame(emotion)
     emotion_df.reset_index(inplace=True)
     emotion_df.columns = ['Emotion', 'Count']

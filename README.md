@@ -1,4 +1,4 @@
-# NLP Twitter Sentiment Project
+# NLP Twitter Sentiment Analysis Project
 
 ![graph0](./reports/figures/aug_neg.png)
 
@@ -150,7 +150,7 @@ The poor performance of the baseline model was largely due the the extreme class
 
 In the end, additional negative sentiment data obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets) and [data.world](https://data.world/crowdflower/apple-twitter-sentiment) were used to augment the baseline data. This new data greatly imroved the performance of all the models and the final results are detailed below.
 
-## Alternative Final Model:
+## Alternate Final Model:
 <font size="4">Logistic Regression CLF Tuned on Augmented Lemmatized Data</font>
 
 A TFIDF vectorizer was used for feature engineering and vectorization.
