@@ -208,14 +208,14 @@ def base_pos_odds(pipe):
     odds_df = pd.DataFrame(odds, 
                  features, 
                  columns=['odds'])\
-                .sort_values(by='odds', ascending=False)
+                .sort_values(by='odds', ascending=True)
     
-    top10_pos_odds = odds_df.tail(10).reset_index()
+    top10_pos_odds = odds_df.head(10).reset_index()
 
     top10_pos_odds['odds'] = 1/top10_pos_odds['odds']
 
     fig, ax = plt.subplots(figsize =(20, 8))
-    sns.barplot(x='index',y='odds', data=top10_pos_odds, palette='Blues', edgecolor='deepskyblue')
+    sns.barplot(x='index',y='odds', data=top10_pos_odds, palette='Blues_r', edgecolor='deepskyblue')
     plt.title('Relative Odds For Top 10 Positive Features')                                                 
     plt.xlabel('')
     plt.ylabel('')
