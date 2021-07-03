@@ -51,7 +51,7 @@ def confusion_report(model, X, y):
                           display_labels=['Positive', 'Negative'], ax=ax)
     plt.title('Confusion Matrix')
     plt.grid(False)
-#     plt.savefig('tuned_rf_cm',  bbox_inches ="tight",\
+#     plt.savefig('dummy',  bbox_inches ="tight",\
 #                 pad_inches = .25, transparent = False)
     plt.show()  
     
@@ -271,7 +271,7 @@ def cloud_cleaner_lem(data):
     return lemmas
 
 def feat_cleaner(data):
-    "Return a list of cleaned & lemmatized words from a series of tweets."
+    "Return a list of cleaned words from a series of tweets."
     
     stripped_data = []
     subs = [

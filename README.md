@@ -51,6 +51,10 @@ Data cleaning details for the project can be found here:
 [Data Cleaning/EDA Notebook](./notebooks/exploratory/cleaning_eda.ipynb)
 
 A master cleaning function was use to lower case all letters, remove punctuation, urls, retweets, mentions, other unwanted substrings ('{link}', &amp, &quot, &nbsp, &lt, &gt), and return a list of clean and regularized (lemmas and stems) tweets.
+
+Lemmatized data was used during the majority of the modeling process, and the final models were tuned and tested on stemmed data to see if there were any boosts to model performance. Ultimately, the models performed roughly the same on stemmed and lemmatized data, and we considered lemmas preferable due to their greater (human) readability when interpreting the features driving the models.
+
+Further, while the set of stems had about one thousand fewer tokens, and lemmatization is generally considered slower than stemming, the overall size of our corpus and vocabularies didn't raise any significant speed or memory issues during lemmatization or modeling with lemmatized data.
 ***
 # Exploring the  Data (Highlights From the EDA)
 
@@ -115,24 +119,46 @@ The size of the word indicates its relative frequency in `Neutral` tweets.
 The data was filtered down to negative and positive tweets, and various binary classifiers were trained and tested during the modeling process. The results of these experiments are detailed below.
 
 ## Baseline Model:
-A baseline model was created from a pipeline consisting of a TFIDF vectorizer and a logistic regression classifier.
+A baseline model was created from a pipeline consisting of a TFIDF vectorizer and a dummy classifier.
 
-![graph8](./reports/figures/baseline_cm.png)
+![graph8](./reports/figures/dummy.png)
 
-<font size="4">Baseline Scores: F1 = 0.14, Recall = .08, Precision = .85</font>
+<font size="4">Baseline Scores: F1 = 0, Recall = 0, Precision = 0</font>
 
 #### Score Interpretation
-Since F1 is a mix of both precision and recall, the interpretation of the results is more easily described in terms of recall and precision.
-- The confusion matrix shows that the baseline model is classifying nearly everything as the majority class.
+F1 is a mix of both precision and recall, so the interpretation of the results is more easily given in terms of recall and precision. 
+- From the confusion matrix we see that the baseline model is classifying everything as the majority class, which was expected.
+- No tweets were correctly classified as negative, so the recall score for this model is 0. 
+- No tweets were classified as negative, so the precision score (the proportion of tweets classified as negative that were truly negative) is be 0 as well.
+***
+## First Simple Model:
+A first simple model was created from a pipeline consisting of a TFIDF vectorizer and a logistic regression classifier. Logistic regression was  chosen a the first model because of its speed and ease of interpretability.
+
+
+![graph18](./reports/figures/baseline_cm.png)
+
+<font size="4"> Scores: F1 = 0.14, Recall = .08, Precision = .85</font>
+
+### Score Interpretation
+Since F1 is a mix of both precision and recall, the interpretation of the results is more easily described in terms of recall and precision. 
+- From the confusion matrix we see that the simple model is classifying nearly everything as the majority class.
 - A recall score of .08 means that 8% of negative tweets were correctly classified as negative. 
 - A precision score of .85 indicates that 85% of tweets classified as negative were truly negative.
 
-Overall, the performance of the model very poor.
-***
-## Data Augmentation & Intermediate Models
-The poor performance of the baseline model was largely due the the extreme class imbalance of the original data, so minority class oversampling and SMOTE methods were implemented. These strategies provided improved performance in the baseline model, but the results were still unsatisfactory.  Various other model types were tested with the oversampled data, but the performance of these alternative models was also poor.
+While it is a slight improvement over the baseline model, the performance of the first simple model very poor. It is only capturing 8% of our desired class, and that is insufficient for use in our business case.
 
-In the end, additional negative sentiment data obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets) and [data.world](https://data.world/crowdflower/apple-twitter-sentiment) were used to augment the baseline data. This new data greatly improved the performance of all the models and the final results are detailed below.
+## Data Augmentation & Intermediate Models
+The poor performance of the first simple model was largely due the the extreme class imbalance of the original data, so minority class oversampling and SMOTE methods were implemented. These strategies provided improved performance in the simple model, but the results were still unsatisfactory.  Various other model types were tested with the oversampled data, but the performance of these alternative models was also poor.
+
+In the end, additional negative sentiment data obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets) and [data.world](https://data.world/crowdflower/apple-twitter-sentiment) were used to augment the baseline data. This new data greatly improved the performance of all the models. Some of the intermediate models are detailed below:
+
+- Simple logistic regession: F1=0.88, Recall=.81 Precision=0.98 (Untuned)
+
+- Tuned Naive Bayes classifier: F1=0.86, Recall=.80 Precision=0.93 (Tuned with GridSearchCV)
+
+- Tuned XGBoost Classifier: F1=.88, Recall=.84, Precision=.93 (Tuned with RandomizedSearchCV)
+
+In the end, the final model slightly improved on the metrics of the untuned logistic regression, naive Bayes classifier, and XGBoost Classifier to varying degrees. The performance of the XGBoost model was close to that of the final model, but came at the expense of considerably longer training and tuning times, a higher computation cost, and less interpretability.
 ***
 ## Final Model:
 <font size="4">Logistic Regression CLF Tuned on Augmented Lemmatized Data</font>
