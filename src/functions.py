@@ -41,7 +41,7 @@ def confusion_report(model, X, y):
     
     f1 = f1_score(y, model.predict(X))
     recall = recall_score(y, model.predict(X))
-    precision = precision_score(y, model.predict(X))
+    precision = precision_score(y, model.predict(X),)
     report = pd.DataFrame([[f1, recall, precision]],\
                           columns=['F1', 'Recall', 'Precision']) 
     
