@@ -43,7 +43,7 @@ An alternate random forest classifier model with an F1 accuracy score of 0.89 (r
 Companies can benefit from understanding how consumers perceive their brands and products, and sentiment analysis of text data from twitter can help provide this knowledge in a timely manner. A surge in negative sentiment would indicate a crisis of some sort that would need to be addressed quickly, and thus negative sentiment was deemed to be the most important class for modeling purposes in the project. However, data on the level of positive sentiment is still very valuable information for strategic planning and building on past successes, so a model that captures both sentiments as accurately as possible is most desirable.  
 ***
 ## Data Understanding
-A data frame was formed from a csv file containing 9,093 rows of text data (tweets, brand/product ids, sentiments labels) originally sourced from [Twitter](https://twitter.com/?lang=en) and collected into the [crowdflower/brands-and-product-emotions](https://data.world/crowdflower/brands-and-product-emotions) dataset. From the overwhelming amount of SXSW hashtags, and numerous references to the iPad 2 (which was released on March 2nd, 2011), it appears that the data was collected during the 2011 South by Southwest festival (which ran from March 11th to March 20th). The data contained ternary (positive, neutral, negative) sentiment data which was filtered down to binary (positive, negative) classes for modeling purposes. 
+A data frame was formed from a csv file containing 9,093 rows of text data (tweets, brand/product ids, sentiment labels) originally sourced from [Twitter](https://twitter.com/?lang=en) and collected into the [crowdflower/brands-and-product-emotions](https://data.world/crowdflower/brands-and-product-emotions) dataset. From the overwhelming amount of SXSW hashtags, and numerous references to the iPad 2 (which was released on March 2nd, 2011), it appears that the data was collected during the 2011 South by Southwest festival (which ran from March 11th to March 20th). The data contained ternary (positive, neutral, negative) sentiment data which was filtered down to binary (positive, negative) classes for modeling purposes. 
 
 During the modeling process, the class imbalance in the data was shown to interfere with model performance, and additional negative sentiment data was used to augment the baseline data. 1,117 rows of negative general topic tweets were obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets), and an additional 1,219 negative Apple tweets were procured from [data.world](https://data.world/crowdflower/apple-twitter-sentiment). This data augmentation greatly improved model performance.
 ***
@@ -229,9 +229,9 @@ An alternate random forest classifier with a F1 accuracy score of 0.89 (recall=.
 
 # Next Steps
 Next steps for the project include: 
-- Using an advanced word embedding and tuning an RNN classifier.
+- Using an advanced word embedding method and tuning an RNN classifier.
 - Implementing a multiclass classifier and adding neutral tweets to the model. 
-- Further investigating the logistic regression model's adherence to the underlying assumptions of logistic regression.
+- Further investigating the final model's adherence to the underlying assumptions of logistic regression.
 
 # For More Information
 
