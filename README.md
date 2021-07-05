@@ -1,4 +1,4 @@
-# NLP Twitter Sentiment Analysis Project
+# Product Sentiment Analysis Project
 
 ![graph0](./reports/figures/aug_neg.png)
 
@@ -33,7 +33,7 @@ nlp_project.yml` in your terminal. Next, run `conda activate nlp_project`.
 ## Overview:
 In recent years, Twitter has emerged as a prominent platform for marketing and targeted advertising. It is also a valuable conduit for the collection of consumer data, and natural language processing (NLP) methods can provide a solution for companies seeking to track consumer sentiment with respect to their brands and products. This project developed and implemented several NLP models to classify tweets as either negative or positive. 
 
-Data cleaning and augmentation, EDA, modeling, and evaluation were performed, and a logistic regression model with an F1 accuracy score of 0.89 (recall=.83, precision=.97) was chosen as the the final model for the project. Because we wanted to avoid both false positives and false negatives for this project, an accuracy measure of F1 was employed since it is sensitive to both types of error. An F1 score is a mix of both precision and recall (F1=1 means perfect recall and precision), so interpretation of the results is more easily described in terms of recall and precision. 
+Data cleaning, EDA, modeling, and evaluation were performed, and a logistic regression model with an F1 accuracy score of 0.89 (recall=.83, precision=.97) was chosen as the the final model for the project. Because we wanted to avoid both false positives and false negatives for this project, an accuracy measure of F1 was employed since it is sensitive to both types of error. An F1 score is a mix of both precision and recall (F1=1 means perfect recall and precision), so interpretation of the results is more easily described in terms of recall and precision. 
 
 An F1 accuracy score of 0.89 (recall=.83, precision=.97) was attained at the end of the project's modeling process. The recall score of .83 meant that 83% of negative tweets were correctly classified as negative, while the precision score of .97 indicated that 97% of tweets classified as negative were truly negative. 
 
@@ -45,17 +45,17 @@ Companies can benefit from understanding how consumers perceive their brands and
 ## Data Understanding
 A data frame was formed from a csv file containing 9,093 rows of text data (tweets, brand/product ids, sentiment labels) originally sourced from [Twitter](https://twitter.com/?lang=en) and collected into the [crowdflower/brands-and-product-emotions](https://data.world/crowdflower/brands-and-product-emotions) dataset. From the overwhelming amount of SXSW hashtags, and numerous references to the iPad 2 (which was released on March 2nd, 2011), it appears that the data was collected during the 2011 South by Southwest festival (which ran from March 11th to March 20th). The data contained ternary (positive, neutral, negative) sentiment data which was filtered down to binary (positive, negative) classes for modeling purposes. 
 
-During the modeling process, the class imbalance in the data was shown to interfere with model performance, and additional negative sentiment data was used to augment the baseline data. 1,117 rows of negative general topic tweets were obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets), and an additional 1,219 negative Apple tweets were procured from [data.world](https://data.world/crowdflower/apple-twitter-sentiment). This data augmentation greatly improved model performance.
+During the modeling process, the class imbalance in the data was shown to interfere with model performance, and additional negative sentiment data was used to augment the original data set. 1,117 rows of negative general topic tweets were obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets), and an additional 1,219 negative Apple tweets were procured from [data.world](https://data.world/crowdflower/apple-twitter-sentiment). The combined data sets resulted in 11,242 rows of data, and this data augmentation greatly improved model performance.
 ***
 ## Data Preparation
 Data cleaning details for the project can be found here:
 [Data Cleaning/EDA Notebook](./notebooks/exploratory/cleaning_eda.ipynb)
 
-A master cleaning function was use to lower case all letters, remove punctuation, urls, retweets, mentions, other unwanted substrings ('{link}', &amp, &quot, &nbsp, &lt, &gt), and return a list of clean and regularized (lemmas and stems) tweets.
+Master cleaning functions were used to lower case all letters, remove punctuation, urls, retweets, mentions, other unwanted substrings ('{link}', &amp, &quot, &nbsp, &lt, &gt), and return a list of clean and regularized (lemmas and stems) tweets.
 
-Lemmatized data was used during the majority of the modeling process, and the final models were tuned and tested on stemmed data to see if there were any boosts to model performance. Ultimately, the models performed roughly the same on stemmed and lemmatized data, and we considered lemmas preferable due to their greater (human) readability when interpreting the features driving the models.
+Lemmatized data was used during the majority of the modeling process, but the final models were also tuned and tested on stemmed data to see if there were any boosts to model performance. Ultimately, the models performed roughly the same on stemmed and lemmatized data, and we considered lemmas preferable due to their greater (human) readability when presenting the project's EDA and interpreting the features driving the models
 
-Further, while the set of stems had about one thousand fewer tokens, and lemmatization is generally considered slower than stemming, the overall size of our corpus and vocabularies didn't raise any significant speed or memory issues during lemmatization or while modeling with lemmatized data.
+Further, while the set of stems had about one thousand fewer tokens, and lemmatization is generally considered slower than stemming, lemmatization and modeling with lemmatized data didn't raise any significant speed or memory issues when compared to working with stemmed data.
 ***
 # Exploring the  Data (Highlights From the EDA)
 
@@ -73,7 +73,7 @@ The severe class imbalance in the original data was problematic for model develo
 
 <font size="4">`Negative`                   accounts for 6% of the data.</font>
 
-Positive and negative tweets are both are under-represented in the original data, with negative tweets being extremely under-represented.
+Positive and negative tweets are both under-represented in the original data, with negative tweets being extremely under-represented.
 
 ### Augmented Dataset Class Balance
 ![graph4](./reports/figures/aug_emotion_share.png)
@@ -134,15 +134,15 @@ A baseline model was created from a pipeline consisting of a TFIDF vectorizer an
 F1 is a mix of both precision and recall, so the interpretation of the results is more easily given in terms of recall and precision. 
 - From the confusion matrix we see that the baseline model is classifying everything as the majority class, which was expected.
 - No tweets were correctly classified as negative, so the recall score for this model is 0. 
-- No tweets were classified as negative, so the precision score (the proportion of tweets classified as negative that were truly negative) is be 0 as well.
+- No tweets were classified as negative, so the precision score (the proportion of tweets classified as negative that were truly negative) is 0 as well.
 ***
 ## First Simple Model:
-A first simple model was created from a pipeline consisting of a TFIDF vectorizer and a logistic regression classifier. Logistic regression was  chosen a the first model because of its speed and ease of interpretability.
+A first simple model was created from a pipeline consisting of a TFIDF vectorizer and a logistic regression classifier. Logistic regression was chosen as the first model because of its speed and ease of interpretability.
 
 
 ![graph18](./reports/figures/baseline_cm.png)
 
-<font size="4"> Scores: F1 = 0.14, Recall = .08, Precision = .85</font>
+<font size="4"> Scores: F1 = .14, Recall = .08, Precision = .85</font>
 
 ### Score Interpretation
 Since F1 is a mix of both precision and recall, the interpretation of the results is more easily described in terms of recall and precision. 
@@ -150,20 +150,20 @@ Since F1 is a mix of both precision and recall, the interpretation of the result
 - A recall score of .08 means that 8% of negative tweets were correctly classified as negative. 
 - A precision score of .85 indicates that 85% of tweets classified as negative were truly negative.
 
-While it is a slight improvement over the baseline model, the performance of the first simple model very poor. It is only capturing 8% of our desired class, and that is insufficient for use in our business case.
-
+While it was a slight improvement over the baseline model's, the performance of the first simple model was still very poor. It was only capturing 8% of our desired class, and that is insufficient for use in our business case.
+***
 ## Data Augmentation & Intermediate Models
 The poor performance of the first simple model was largely due the the extreme class imbalance of the original data, so minority class oversampling and SMOTE methods were implemented. These strategies provided improved performance in the simple model, but the results were still unsatisfactory.  Various other model types were tested with the oversampled data, but the performance of these alternative models was also poor.
 
 In the end, additional negative sentiment data obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets) and [data.world](https://data.world/crowdflower/apple-twitter-sentiment) were used to augment the baseline data. This new data greatly improved the performance of all the models. Some of the intermediate models are detailed below:
 
-- Simple logistic regression: F1=0.88, Recall=.81 Precision=0.98 (Untuned)
+- Simple logistic regression: F1=.88, Recall=.81 Precision=.98 (Untuned)
 
-- Tuned Naive Bayes classifier: F1=0.86, Recall=.80 Precision=0.93 (Tuned with GridSearchCV)
+- Tuned Naive Bayes classifier: F1=.86, Recall=.80 Precision=0.93 (Tuned with GridSearchCV)
 
 - Tuned XGBoost Classifier: F1=.88, Recall=.84, Precision=.93 (Tuned with RandomizedSearchCV)
 
-In the end, the final model slightly improved on the metrics of the untuned logistic regression, naive Bayes classifier, and XGBoost Classifier to varying degrees. The performance of the XGBoost model was close to that of the final model, but came at the expense of considerably longer training and tuning times, a higher computational cost, and less interpretability.
+Ultimately, the final model slightly improved on the metrics of the untuned logistic regression, naive Bayes classifier, and XGBoost Classifier to varying degrees. The performance of the XGBoost model was close to that of the final model, but came at the expense of considerably longer training and tuning times, a higher computational cost, and less interpretability.
 ***
 ## Final Model:
 <font size="4">Logistic Regression CLF Tuned on Augmented Lemmatized Data</font>
@@ -174,14 +174,14 @@ Given its overall performance, the tuned logistic regression model is the final 
 
 ![graph12](./reports/figures/tuned_logreg_cm.png)
 
-<font size="4">Final Model Metrics: F1=0.89, Recall=0.83, Precision=0.97</font>
+<font size="4">Final Model Metrics: F1=.89, Recall=.83, Precision=.97</font>
 
 #### Score Interpretation
 From the confusion matrix we see that the model still has a little more trouble classifying negatives relative to positives, but the overall performance is acceptable.
 
 - The augmentation of the dataset has greatly improved model performance.
 - A recall score of .83 means that 83% of negative tweets were correctly classified as negative. 
-- A precision score of .97 indicates that 94% of tweets classified as negative were truly negative.
+- A precision score of .97 indicates that 97% of tweets classified as negative were truly negative.
 
 #### Feature Coefficients
 ![graph13](./reports/figures/tuned_coeff.png)
@@ -207,7 +207,7 @@ The performance of the random forest model is comparable  to that of the the log
 
 ![graph16](./reports/figures/tuned_rf_cm.png)
 
-<font size="4">Metrics: F1=0.89, Recall=0.85, Precision=0.94</font>
+<font size="4">Metrics: F1=.89, Recall=.85, Precision=.94</font>
 
 #### Score Interpretation
 From the confusion matrix we see that the model still has a little more trouble classifying negatives relative to positives, but the overall performance is acceptable.
@@ -223,9 +223,9 @@ From the confusion matrix we see that the model still has a little more trouble 
 `ipad` and `unhappy` are again the most important words driving the model, and six of the top ten features are brand or product signifiers.
 
 # Conclusion
-A tuned logistic regression model was chosen as the final model of the project, and an F1 accuracy score of 0.89 (recall=.83, precision=.97) achieved at the end of the modeling process. The recall score of .83 meant that 83% of negative tweets were correctly classified as negative, and the precision score of .97 indicated that 97% of tweets classified as negative were truly negative. 
+A tuned logistic regression model was chosen as the final model of the project, and an F1 accuracy score of .89 (recall=.83, precision=.97) achieved at the end of the modeling process. The recall score of .83 meant that 83% of negative tweets were correctly classified as negative, and the precision score of .97 indicated that 97% of tweets classified as negative were truly negative. 
 
-An alternate random forest classifier with a F1 accuracy score of 0.89 (recall=.85, precision=.94) is also available for use if a higher recall is the most pressing concern.
+An alternate random forest classifier with a F1 accuracy score of .89 (recall=.85, precision=.94) is also available for use if a higher recall is the most pressing concern.
 
 # Next Steps
 Next steps for the project include: 

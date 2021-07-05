@@ -189,13 +189,13 @@ def base_neg_odds(pipe):
     fig, ax = plt.subplots(figsize =(20, 8))
     sns.barplot(x='index',y='odds', data=top10_neg_odds, palette='Blues_r',
                 edgecolor='deepskyblue')
-    plt.title('Relative Odds For The Top 10 Negative Features')                                                 
+    plt.suptitle('Relative Odds For The Top 10 Negative Features', fontsize=30)
+    plt.title('Higher Bars Mean Higher Odds of a Negative Tweet', fontsize=20)
     plt.xlabel('')
     plt.ylabel('')
     plt.xticks(rotation=80)
-    plt.legend(title='Odds That Negative Sentiment Is More Likely', labels=['Multiple'])
-#     plt.savefig('base_negative',  bbox_inches ="tight",\
-#                 pad_inches = .25, transparent = False)
+    plt.savefig('tuned_negative',  bbox_inches ="tight",\
+                pad_inches = .25, transparent = False)
     plt.show()
 
     
@@ -216,13 +216,13 @@ def base_pos_odds(pipe):
 
     fig, ax = plt.subplots(figsize =(20, 8))
     sns.barplot(x='index',y='odds', data=top10_pos_odds, palette='Blues_r', edgecolor='deepskyblue')
-    plt.title('Relative Odds For Top 10 Positive Features')                                                 
+    plt.suptitle('Relative Odds For Top 10 Positive Features', fontsize=30)
+    plt.title('Higher Bars Mean Higher Odds of a Positive Tweet', fontsize=20)
     plt.xlabel('')
     plt.ylabel('')
     plt.xticks(rotation=80)
-    plt.legend(title='Odds That a Positive Sentiment is More Likely', labels=['Multiple'])
-#     plt.savefig('tuned_positive',  bbox_inches ="tight",\
-#                 pad_inches = .25, transparent = False)
+    plt.savefig('tuned_positive',  bbox_inches ="tight",\
+                pad_inches = .25, transparent = False)
     plt.show()
     
 def feature_plot(pipe):
