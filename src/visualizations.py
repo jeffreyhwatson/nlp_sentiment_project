@@ -194,8 +194,8 @@ def base_neg_odds(pipe):
     plt.xlabel('')
     plt.ylabel('')
     plt.xticks(rotation=80)
-    plt.savefig('tuned_negative',  bbox_inches ="tight",\
-                pad_inches = .25, transparent = False)
+#     plt.savefig('tuned_negative',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
     plt.show()
 
     
@@ -221,8 +221,8 @@ def base_pos_odds(pipe):
     plt.xlabel('')
     plt.ylabel('')
     plt.xticks(rotation=80)
-    plt.savefig('tuned_positive',  bbox_inches ="tight",\
-                pad_inches = .25, transparent = False)
+#     plt.savefig('tuned_positive',  bbox_inches ="tight",\
+#                 pad_inches = .25, transparent = False)
     plt.show()
     
 def feature_plot(pipe):

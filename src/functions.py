@@ -27,6 +27,25 @@ def f_score(y_true, y_pred):
 # creating scorer object for pipelines
 f1 = make_scorer(f_score)
 
+def recall(y_true, y_pred):
+    "Recall scoring function for use in make_scorer."
+    
+    rec = recall_score(y_true, y_pred)
+    return rec
+
+# creating scorer object for cv
+recall = make_scorer(recall)
+
+
+def precision(y_true, y_pred):
+    "Precision scoring function for use in make_scorer."
+    
+    pre = precision_score(y_true, y_pred)
+    return pre
+
+# creating scorer object for cv
+precision = make_scorer(precision)
+
 def splitter(X, y):
     """Returns a train/test split."""
     

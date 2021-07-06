@@ -137,12 +137,15 @@ F1 is a mix of both precision and recall, so the interpretation of the results i
 - No tweets were classified as negative, so the precision score (the proportion of tweets classified as negative that were truly negative) is 0 as well.
 ***
 ## First Simple Model:
+
+<font size="4">Average Validation Scores: F1=.07, Recall=.04, Precision=.95</font>
+
 A first simple model was created from a pipeline consisting of a TFIDF vectorizer and a logistic regression classifier. Logistic regression was chosen as the first model because of its speed and ease of interpretability.
 
 
 ![graph18](./reports/figures/baseline_cm.png)
 
-<font size="4"> Scores: F1 = .14, Recall = .08, Precision = .85</font>
+<font size="4">Scores on Test Data: F1 = .14, Recall = .08, Precision = .85</font>
 
 ### Score Interpretation
 Since F1 is a mix of both precision and recall, the interpretation of the results is more easily described in terms of recall and precision. 
@@ -152,21 +155,23 @@ Since F1 is a mix of both precision and recall, the interpretation of the result
 
 While it was a slight improvement over the baseline model's, the performance of the first simple model was still very poor. It was only capturing 8% of our desired class, and that is insufficient for use in our business case.
 ***
-## Data Augmentation & Intermediate Models
+#### Data Augmentation & Intermediate Models
 The poor performance of the first simple model was largely due the the extreme class imbalance of the original data, so minority class oversampling and SMOTE methods were implemented. These strategies provided improved performance in the simple model, but the results were still unsatisfactory.  Various other model types were tested with the oversampled data, but the performance of these alternative models was also poor.
 
-In the end, additional negative sentiment data obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets) and [data.world](https://data.world/crowdflower/apple-twitter-sentiment) were used to augment the baseline data. This new data greatly improved the performance of all the models. Some of the intermediate models are detailed below:
+In the end, additional negative sentiment data obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets) and [data.world](https://data.world/crowdflower/apple-twitter-sentiment) were used to augment the baseline data. This new data greatly improved the performance of all the models. The average metrics and details of some of the intermediate models are detailed below: 
 
-- Simple logistic regression: F1=.88, Recall=.81 Precision=.98 (Untuned)
+- Simple logistic regression: F1=.89, Recall=.84 Precision=.94 (Untuned)
 
-- Tuned Naive Bayes classifier: F1=.86, Recall=.80 Precision=0.93 (Tuned with GridSearchCV)
+- Tuned Naive Bayes classifier: F1=.87, Recall=.81 Precision=.94 (Tuned with GridSearchCV)
 
-- Tuned XGBoost Classifier: F1=.88, Recall=.84, Precision=.93 (Tuned with RandomizedSearchCV)
+- Tuned XGBoost Classifier: F1=.88, Recall=.86, Precision=.91 (Tuned with RandomizedSearchCV)
 
 Ultimately, the final model slightly improved on the metrics of the untuned logistic regression, naive Bayes classifier, and XGBoost Classifier to varying degrees. The performance of the XGBoost model was close to that of the final model, but came at the expense of considerably longer training and tuning times, a higher computational cost, and less interpretability.
 ***
 ## Final Model:
 <font size="4">Logistic Regression CLF Tuned on Augmented Lemmatized Data</font>
+
+<font size="4">Average Scores: F1=.90, Recall=.84, Precision=.96</font>
 
 A TFIDF vectorizer was used for feature engineering and vectorization.
 
@@ -174,7 +179,7 @@ Given its overall performance, the tuned logistic regression model is the final 
 
 ![graph12](./reports/figures/tuned_logreg_cm.png)
 
-<font size="4">Final Model Metrics: F1=.89, Recall=.83, Precision=.97</font>
+<font size="4">Scores on Test Data: F1=.89, Recall=.83, Precision=.97</font>
 
 #### Score Interpretation
 From the confusion matrix we see that the model still has a little more trouble classifying negatives relative to positives, but the overall performance is acceptable.
@@ -201,13 +206,15 @@ A higher bar means a greater relative importance of the feature to the model. Ag
 ## Alternate Final Model:  
 <font size="4">Tuned Random Forest Classifier</font>
 
+<font size="4">Average Scores: F1=.89, Recall=.85, Precision=.94</font>
+
 A TFIDF vectorizer was used for feature engineering and vectorization.
 
 The performance of the random forest model is comparable  to that of the the logistic regression model, albeit with slightly higher recall and slightly lower precision. However, it is slower and more computationally expensive. If the highest possible recall is needed, and speed and computational power are of minimal concern, then this model might be preferable.
 
 ![graph16](./reports/figures/tuned_rf_cm.png)
 
-<font size="4">Metrics: F1=.89, Recall=.85, Precision=.94</font>
+<font size="4">Scores on Test Data: F1=.89, Recall=.85, Precision=.94</font>
 
 #### Score Interpretation
 From the confusion matrix we see that the model still has a little more trouble classifying negatives relative to positives, but the overall performance is acceptable.

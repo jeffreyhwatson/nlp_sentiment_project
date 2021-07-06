@@ -1,8 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from sklearn.model_selection import (train_test_split,
-                                     cross_val_score)
+from sklearn.model_selection import (train_test_split, cross_validate)
 from sklearn.metrics import (f1_score, recall_score, precision_score,
                              make_scorer)
 
@@ -10,20 +9,28 @@ class Harness:
     
     def __init__(self, scorer, random_state=2021):
         self.scorer = scorer
-        self.history = pd.DataFrame(columns=['Name', 'Accuracy (F1)', 'Notes'])
+        self.history = pd.DataFrame(columns=['Name', 'F1', 'Recall',
+                                             'Precision', 'Notes'])
 
     def report(self, model, X, y, name, notes='', cv=5,):
-        scores = cross_val_score(model, X, y, 
+        self.scores = cross_validate(model, X, y, 
                                  scoring=self.scorer, cv=cv)
-        frame = pd.DataFrame([[name, scores.mean(), notes]], columns=['Name', 'Accuracy (F1)', 'Notes'])
+        frame = pd.DataFrame([[name, self.scores['test_f1'].mean(),
+                               self.scores['test_recall'].mean(),
+                               self.scores['test_precision'].mean(), notes]],
+                             columns=['Name', 'F1', 'Recall',
+                                      'Precision', 'Notes'])
         self.history = self.history.append(frame)
         self.history = self.history.reset_index(drop=True)
-        self.history = self.history.sort_values('Accuracy (F1)')
-        self.print_error(name, scores.mean())
-        return scores
+        self.history = self.history.sort_values('F1')
+        self.print_error(name, self.scores['test_f1'].mean())
+        return [self.scores['test_f1'].mean(), self.scores['test_recall'].mean(),
+                self.scores['test_precision'].mean()]
 
     def print_error(self, name, Accuracy):
-        print(f'{name} has an average F1 of {Accuracy}')
+        print(f"{name} has an average F1 of {self.scores['test_f1'].mean()}")
+        print(f"{name} has an average Recall of {self.scores['test_recall'].mean()}")
+        print(f"{name} has an average Precision of {self.scores['test_precision'].mean()}")
 
 
 
