@@ -158,7 +158,7 @@ While it was a slight improvement over the baseline model's, the performance of 
 #### Data Augmentation & Intermediate Models
 The poor performance of the first simple model was largely due the the extreme class imbalance of the original data, so minority class oversampling and SMOTE methods were implemented. These strategies provided improved performance in the simple model, but the results were still unsatisfactory.  Various other model types were tested with the oversampled data, but the performance of these alternative models was also poor.
 
-In the end, additional negative sentiment data obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets) and [data.world](https://data.world/crowdflower/apple-twitter-sentiment) were used to augment the baseline data. This new data greatly improved the performance of all the models. The average metrics and details of some of the intermediate models are detailed below: 
+In the end, additional negative sentiment data obtained from [Kaggle](https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets) and [data.world](https://data.world/crowdflower/apple-twitter-sentiment) were used to augment the original data. This new data greatly improved the performance of all the models. The average metrics and details of some of the intermediate models are detailed below: 
 
 - Simple logistic regression: F1=.89, Recall=.84 Precision=.94 (Untuned)
 
